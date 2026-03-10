@@ -28,7 +28,6 @@ contract AuthorizationTest is Test {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(signerKey, digest);
         bytes memory sig = abi.encodePacked(r, s, v);
 
-        // ✅ No signer parameter - function recovers it internally
         address recovered = auth.verify(action, sig);
         assertEq(recovered, signer, "Recovered signer should match");
     }
@@ -43,10 +42,8 @@ contract AuthorizationTest is Test {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(signerKey, digest);
         bytes memory sig = abi.encodePacked(r, s, v);
 
-        // First use: OK
         auth.verify(action, sig);
 
-        // Second use: REVERT
         vm.expectRevert(IAuthorization.NonceAlreadyUsed.selector);
         auth.verify(action, sig);
     }
