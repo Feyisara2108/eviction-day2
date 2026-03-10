@@ -1,98 +1,56 @@
-## Foundry
+# ARES Treasury Execution System
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+ARES Protocol manages a large on-chain treasury and needs a secure way to execute governance-approved transactions.  
+This repository implements a modular treasury execution system designed to reduce common governance and treasury risks such as replay attacks, premature execution, and double reward claims.
 
-Foundry consists of:
+### Features
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+- Governance proposal system
+- Time-delayed treasury execution
+- Cryptographic authorization using signatures
+- Merkle-based contributor reward distribution
+- Replay protection using nonces
+- Double claim prevention
+- Modular contract architecture
 
-## Documentation
+### System Components
 
-https://book.getfoundry.sh/
+The protocol is separated into independent modules:
 
-## Usage
+- **AresTreasury (Core)**  
+  Handles proposal lifecycle: creation, queueing, execution, and cancellation.
 
-### Build
+- **AuthorizationModule**  
+  Verifies signatures from approved governance signers and prevents replay attacks through nonce tracking.
 
-```shell
-$ forge build
-```
+- **TimelockModule**  
+  Enforces a mandatory delay before any treasury transaction can be executed.
 
-### Test
+- **RewardDistributor**  
+  Allows contributors to claim rewards using Merkle proofs in a gas-efficient way.
 
-```shell
-$ forge test
-```
+### Security Protections
 
-### Format
+The system includes protections against common smart contract risks:
 
-```shell
-$ forge fmt
-```
+- Signature replay attacks
+- Unauthorized treasury execution
+- Double reward claims
+- Premature execution of proposals
+- Governance transaction replay
 
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# ARES Treasury Protocol
-
-Secure treasury execution architecture designed for governance-controlled funds.
-
-Modules:
-- Proposal System
-- Cryptographic Authorization
-- Timelock Execution Engine
-- Merkle Reward Distribution
-
-Security protections:
-- signature replay protection
-- queued timelock execution
-- double claim prevention
-- nonce management
-- modular contract boundaries
-
-Built with Foundry.
+### Project Structure
+src  
+├── core  
+│   └── AresTreasury.sol  
+├── interfaces  
+│   ├── IAresTreasury.sol  
+│   ├── IAuthorization.sol  
+│   └── IRewardDistributor.sol   
+├── libraries   
+│   ├── ECDSAValidator.sol  
+│   └── ProposalHashLib.sol  
+└── modules    
+    ├── AuthorizationModule.sol  
+    ├── RewardDistributor.sol  
+    └── TimelockModule.sol  
