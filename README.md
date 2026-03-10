@@ -64,3 +64,35 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ARES Treasury Protocol
+
+Secure treasury execution architecture designed for governance-controlled funds.
+
+Modules:
+- Proposal System
+- Cryptographic Authorization
+- Timelock Execution Engine
+- Merkle Reward Distribution
+
+Security protections:
+- signature replay protection
+- queued timelock execution
+- double claim prevention
+- nonce management
+- modular contract boundaries
+
+Built with Foundry.
