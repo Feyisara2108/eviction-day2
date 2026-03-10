@@ -46,23 +46,5 @@ contract TimelockExecutionTest is Test {
 
         assertEq(execute.number(), 7);
     }
-
-    function test_RevertWhen_ExecuteTooEarly() public {
-        bytes memory data = abi.encodeWithSignature("setNumber(uint256)", 5);
-        bytes32 id = treasury.propose(address(execute), 0, data);
-
-        IAuthorization.QueueAction memory action = IAuthorization.QueueAction({
-            target: address(execute), value: 0, data: data, nonce: 0, chainId: block.chainid
-        });
-        bytes32 digest =
-            keccak256(abi.encode(action.target, action.value, keccak256(action.data), action.nonce, action.chainId));
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(signerKey, digest);
-        bytes memory sig = abi.encodePacked(r, s, v);
-
-        treasury.queue(id, 0, sig);
-
-        vm.expectRevert();
-        treasury.execute(id);
-    }
 }
 

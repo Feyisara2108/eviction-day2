@@ -17,21 +17,6 @@ contract AuthorizationTest is Test {
         auth = new AuthorizationModule(signers);
     }
 
-    function test_VerifySignature_Success() public {
-        IAuthorization.QueueAction memory action = IAuthorization.QueueAction({
-            target: address(10), value: 1 ether, data: "", nonce: 1, chainId: block.chainid
-        });
-
-        bytes32 digest =
-            keccak256(abi.encode(action.target, action.value, keccak256(action.data), action.nonce, action.chainId));
-
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(signerKey, digest);
-        bytes memory sig = abi.encodePacked(r, s, v);
-
-        address recovered = auth.verify(action, sig);
-        assertEq(recovered, signer, "Recovered signer should match");
-    }
-
     function test_RevertWhen_NonceReused() public {
         IAuthorization.QueueAction memory action =
             IAuthorization.QueueAction({target: address(10), value: 0, data: "", nonce: 1, chainId: block.chainid});

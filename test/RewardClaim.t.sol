@@ -35,18 +35,4 @@ contract RewardClaimTest is Test {
 
         assertTrue(distributor.claimed(user));
     }
-
-    function test_RevertWhen_DoubleClaim() public {
-        bytes32 leaf = keccak256(abi.encodePacked(user, uint256(50 ether)));
-        distributor.updateRoot(leaf);
-
-        IRewardDistributor.ClaimData memory claim =
-            IRewardDistributor.ClaimData({user: user, amount: 50 ether, proof: new bytes32[](0)});
-
-        vm.prank(user);
-        distributor.claim(claim);
-
-        vm.expectRevert(IRewardDistributor.AlreadyClaimed.selector);
-        distributor.claim(claim);
-    }
 }

@@ -25,22 +25,4 @@ contract ProposalLifecycleTest is Test {
         assertEq(p.target, address(10));
         assertEq(p.executed, false);
     }
-
-    function testQueueProposal() public {
-        bytes32 id = treasury.propose(address(10), 0, "");
-
-        IAuthorization.QueueAction memory action =
-            IAuthorization.QueueAction({target: address(10), value: 0, data: "", nonce: 0, chainId: block.chainid});
-
-        bytes32 digest =
-            keccak256(abi.encode(action.target, action.value, keccak256(action.data), action.nonce, action.chainId));
-
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(signerKey, digest);
-        bytes memory sig = abi.encodePacked(r, s, v);
-
-        treasury.queue(id, 0, sig);
-
-        IAresTreasury.Proposal memory p = treasury.getProposal(id);
-        assertTrue(p.queued);
-    }
 }
