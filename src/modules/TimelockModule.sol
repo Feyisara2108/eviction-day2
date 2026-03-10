@@ -18,6 +18,6 @@ contract TimelockModule {
     function validateExecution(bytes32 proposalId) external view {
         uint256 eta = executionTime[proposalId];
 
-        if (block.timestamp < eta) revert TooEarly();
+        if (block.timestamp < eta) revert TooEarly(); //expected time of arrival is the eta
     }
 }
