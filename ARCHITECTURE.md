@@ -1,6 +1,6 @@
 # ARES Treasury System Architecture
 
-## Overview
+### Overview
 
 The ARES treasury system is designed as a modular execution framework for governance-controlled funds.  
 The architecture separates responsibility across independent modules to reduce complexity and improve security.
@@ -9,7 +9,7 @@ This separation limits the impact of failures and makes each component easier to
 
 ---
 
-## Core Components
+### Core Components
 
 ### 1. AresTreasury (Core Execution Layer)
 

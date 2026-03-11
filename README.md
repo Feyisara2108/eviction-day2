@@ -54,3 +54,7 @@ src
     ├── AuthorizationModule.sol  
     ├── RewardDistributor.sol  
     └── TimelockModule.sol  
+
+### Deployment
+Deployed locally using Foundry/anvil test accounts.
+Run: `forge script script/DeployAresTreasury.s.sol --rpc-url http://127.0.0.1:8545 --broadcast`

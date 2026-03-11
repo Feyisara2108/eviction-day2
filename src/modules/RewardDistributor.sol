@@ -4,29 +4,32 @@ pragma solidity ^0.8.28;
 import "../interfaces/IRewardDistributor.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract RewardDistributor is IRewardDistributor, Ownable {
-    IERC20 public immutable token;
+    using SafeERC20 for IERC20;
+
+    IERC20 public immutable TOKEN;
     bytes32 public merkleRoot;
     mapping(address => bool) public claimed;
 
     constructor(address _token) Ownable(msg.sender) {
-        token = IERC20(_token);
+        TOKEN = IERC20(_token);
     }
 
-    function claim(IRewardDistributor.ClaimData calldata claim) external override {
-        if (claimed[claim.user]) revert AlreadyClaimed();
+    function claim(IRewardDistributor.ClaimData calldata claimData) external override {
+        if (claimed[claimData.user]) revert AlreadyClaimed();
 
-        bytes32 leaf = keccak256(abi.encodePacked(claim.user, claim.amount));
-        bool valid = MerkleProof.verify(claim.proof, merkleRoot, leaf);
+        bytes32 leaf = keccak256(abi.encodePacked(claimData.user, claimData.amount));
+        bool valid = MerkleProof.verify(claimData.proof, merkleRoot, leaf);
 
         if (!valid) revert InvalidProof();
 
-        claimed[claim.user] = true;
-        token.transfer(claim.user, claim.amount);
+        claimed[claimData.user] = true;
+        TOKEN.safeTransfer(claimData.user, claimData.amount);
 
-        emit Claimed(claim.user, claim.amount);
+        emit Claimed(claimData.user, claimData.amount);
     }
 
     function updateRoot(bytes32 newRoot) external override onlyOwner {
